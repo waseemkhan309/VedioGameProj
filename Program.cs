@@ -1,5 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using VedioGameAPI.Data;
 
 namespace VedioGameAPI
 {
@@ -12,7 +14,8 @@ namespace VedioGameAPI
             // Add services to the container.  registers the necessary services for using controllers
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
-
+            builder.Services.AddDbContext<VedioGameDbContext>(
+                options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
