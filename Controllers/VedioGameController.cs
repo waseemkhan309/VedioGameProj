@@ -30,5 +30,43 @@ namespace VedioGameAPI.Controllers
             }
             return Ok(vedioGame);
         }
-    }
+
+        [HttpPost]
+        public ActionResult<VedioGame> CreateVedioGame([FromBody] VedioGame vedioGame) { 
+            if(vedioGame == null)
+            {
+                return BadRequest();
+            }
+
+            vedioGame.Id = vedioGames.Max(vg => vg.Id) + 1;
+            vedioGames.Add(vedioGame);
+            return CreatedAtAction(nameof(GetVedioGameById), new { id = vedioGame.Id }, vedioGame); 
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult UpdateVedioGame(int id, [FromBody] VedioGame updatedVedioGame)
+        {
+            var vedioGame = vedioGames.FirstOrDefault(vg => vg.Id == id);
+            if (vedioGame == null)
+            {
+                return NotFound();
+            }
+            vedioGame.Title = updatedVedioGame.Title;
+            vedioGame.Platform = updatedVedioGame.Platform;
+            vedioGame.Developer = updatedVedioGame.Developer;
+            vedioGame.Publisher = updatedVedioGame.Publisher;
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteVedioGame(int id)
+        {
+            var vedioGame = vedioGames.FirstOrDefault(vg => vg.Id == id);
+            if (vedioGame == null)
+            {
+                return NotFound();
+            }
+            vedioGames.Remove(vedioGame);
+            return NoContent();
+        }
 }
